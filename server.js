@@ -28,28 +28,14 @@ mongoose
 const app = express()
 const PORT = process.env.PORT || 5000;
 
-app.use(
-    cors({
-        origin: 'http://localhost:5173',
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        allowedHeaders: [
-            'Content-Type',
-            'Authorization',
-            'Cache-control',
-            'Expires',  
-            'Pragma'
-        ],
-        credentials: true,
-    })
-);
-//for versal deployment
-express.use(cors(
-    {
-        origin: ['https://ecom-mern-frontend.vercel.app', 'http://localhost:5173'],
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        credentials: true,  
-    }
-));
+app.use(cors({
+    origin: [
+        'http://localhost:5173',
+        'https://vercel-frontend-jade-eta.vercel.app/'
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
 //
 app.use(cookieParser());
 app.use(express.json());
@@ -67,7 +53,21 @@ app.use('/api/shop/review', shopReviewRouter);
 
 app.use('/api/common/feature', commonFeatureRouter);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
 
+app.get('/', (req, res) => {
+    res.json({
+        success: true,
+        message: 'MERN Backend API is running'
+    });
+});
+// app.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+// });
+
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
+
+module.exports = app;
